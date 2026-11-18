@@ -1,3 +1,4 @@
+
 name: Build SHRETRONX
 
 on:
@@ -10,11 +11,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
+
+      - name: Generate Android project files
+        run: |
+          flutter create --platforms=android --project-name shretronx scaffold
+          cp -R scaffold/android .
+
       - run: flutter pub get
       - run: flutter build apk --release
+
       - uses: actions/upload-artifact@v4
         with:
           name: SHRETRONX-Android
@@ -24,12 +33,21 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
+
+      - name: Generate Windows project files
+        run: |
+          flutter create --platforms=windows --project-name shretronx scaffold
+          Copy-Item -Recurse scaffold/windows .
+
       - run: flutter pub get
       - run: flutter build windows --release
+
       - uses: actions/upload-artifact@v4
         with:
           name: SHRETRONX-Windows
           path: build/windows/x64/runner/Release/
+          
